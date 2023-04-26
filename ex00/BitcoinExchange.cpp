@@ -4,6 +4,12 @@ std::map<std::string, double> readData()
 {
     std::map<std::string, double> _data;
     std::ifstream file("data.csv");
+    if (!file)
+    {
+        std::cerr << "Error: could not open data file" << std::endl;
+        file.close();
+        exit(1);
+    }
     std::string line;
     std::getline(file, line);
     while (std::getline(file, line))
@@ -22,14 +28,15 @@ void checkInput(char *input, std::map<std::string, double> data)
     std::ifstream file(input);
     if (!file)
     {
-        std::cerr << "Error: could not open input file." << std::endl;
+        std::cerr << "Error: could not open input file" << std::endl;
         exit(1);
     }
     std::string line;
     std::getline(file, line);
     if (line.compare("date | value"))
     {
-        std::cerr << "Error: First line of input file is not 'date | value'." << std::endl;
+        std::cerr << "Error: First line of input file is not 'date | value'" << std::endl;
+        file.close();
         exit(1);
     }
     while (std::getline(file, line))
@@ -42,9 +49,9 @@ void checkInput(char *input, std::map<std::string, double> data)
         else if (!checkDate(date) || !checkValue(value))
             std::cout << "Error: bad input => " << line << std::endl;
         else if (stod(value) > 1000)
-            std::cout << "Error: too large a number." << std::endl;
+            std::cout << "Error: too large a number" << std::endl;
         else if (stod(value) < 0)
-            std::cout << "Error: not a positive number." << std::endl;
+            std::cout << "Error: not a positive number" << std::endl;
         else
             std::cout << date << " => " << value << " = " << (stod(value) * getRate(date, data)) << std::endl;
     }
@@ -70,6 +77,8 @@ std::string moveBackOneDay(const std::string &date)
     int year, month, day;
     sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day);
     int prev_year = year, prev_month = month, prev_day = day - 1;
+    if (prev_year > 2023)
+        prev_year = 2023;
     if (prev_day == 0)
     {
         prev_month -= 1;

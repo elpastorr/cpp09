@@ -30,17 +30,24 @@ void    read_RPN(std::string input)
     {
         if (isdigit(input[i]))
         {
+            if (input[i + 1] && !isspace(input[i + 1]))
+                throw std::invalid_argument("Invalid Input\n");
             num++;
             nbrs.push(input[i] - '0');
         }
+        else if (nbrs.size() == 0)
+        {
+            break;
+        }
         else if (ops.find(input[i]) != std::string::npos)
         {
-            if (num < 2)
-                throw std::invalid_argument("Invalid Input\n");
+            if (num < 2 || (input[i + 1] && !isspace(input[i + 1])))
+                throw std::invalid_argument("Invalid Inprut\n");
             op++;
             int n2 = nbrs.top();
-            nbrs.pop();
-            nbrs.top() = calcul(nbrs.top(), n2, input[i]);
+            nbrs.pop(); 
+            if (nbrs.size() != 0)
+                nbrs.top() = calcul(nbrs.top(), n2, input[i]);
         }
         else if (!isspace(input[i]))
             throw std::invalid_argument("Invalid Input\n");

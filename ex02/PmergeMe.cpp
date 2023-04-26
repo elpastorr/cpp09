@@ -84,15 +84,33 @@ void    algo(int ac, T &cont, S &cont1, V &cont2, bool opt)
     if (opt == true)
     {
         std::cout << "After: (vector)";
-        for (size_t i = 0; i < cont1.size(); i++)
-            std::cout << " " << cont1[i];
+        if (cont1.size() < 5)
+        {
+            for (size_t i = 0; i < cont1.size(); i++)
+                std::cout << " " << cont1[i];
+        }
+        else
+        {
+            for (size_t i = 0; i < 4; i++)
+                std::cout << " " << cont1[i];
+            std::cout << " [...]";
+        }
         std::cout << std::endl << "Time to process a range of " << ac << " elements with std::vector : " << time << " us" << std::endl;
     }
     else
     {
         std::cout << "After: (deque)";
-        for (size_t i = 0; i < cont1.size(); i++)
-            std::cout << " " << cont1[i];
+        if (cont1.size() < 5)
+        {
+            for (size_t i = 0; i < cont1.size(); i++)
+                std::cout << " " << cont1[i];
+        }
+        else
+        {
+            for (size_t i = 0; i < 4; i++)
+                std::cout << " " << cont1[i];
+            std::cout << " [...]";
+        }
         std::cout << std::endl << "Time to process a range of " << ac << " elements with std::deque : " << time << " us" << std::endl;
     }
 }
