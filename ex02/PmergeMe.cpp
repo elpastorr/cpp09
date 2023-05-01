@@ -10,11 +10,13 @@ void    pMergeMe(int ac, char **av)
         odd = true;
 
         if ((std::atoi(av[ac - 1])) < 0)
-        {
-            std::cerr << "Error: Negative number" << std::endl;
-            exit(1);
-        }
+            throw std::invalid_argument("Error: Negative number");
         tmp = std::atoi(av[ac - 1]);
+    }
+    for (int i = 1; i < ac; i++)
+    {
+        if (std::atoi(av[i]) < 0)
+            throw std::invalid_argument("Error: Negative number");
     }
     ac--;
     std::cout << "Before:";
@@ -35,7 +37,7 @@ void    pMergeMe(int ac, char **av)
     for (int i = 1; i < ac; i += 2)
     {
         if (!checkNumber(av[i], av[i + 1]))
-            exit(1);
+            throw std::invalid_argument("Error: Invalid argument");
         else
             vec.push_back(std::make_pair(std::atoi(av[i]), std::atoi(av[i + 1])));
     }
@@ -46,7 +48,7 @@ void    pMergeMe(int ac, char **av)
     for (int i = 1; i < ac; i += 2)
     {
         if (!checkNumber(av[i], av[i + 1]))
-            exit(1);
+            throw std::invalid_argument("Error: Invalid argument");
         else
             deq.push_back(std::make_pair(std::atoi(av[i]), std::atoi(av[i + 1])));
     }
@@ -59,7 +61,7 @@ template <typename T, typename S, typename V>
 void    algo(int ac, T &cont, S &cont1, V &cont2, bool opt)
 {
     struct timeval start, end;
-    long sec, micro;
+    double st, en;
 
     gettimeofday(&start, NULL);
     for (size_t i = 0; i < cont.size(); i++)
@@ -78,9 +80,9 @@ void    algo(int ac, T &cont, S &cont1, V &cont2, bool opt)
     if (odd)
         cont1.insert(std::lower_bound(cont1.begin(), cont1.end(), tmp), tmp);
     gettimeofday(&end, NULL);
-    sec = end.tv_sec - start.tv_sec;
-    micro = end.tv_usec - start.tv_usec;
-    long time = (sec / 1000000) + micro;
+    st = start.tv_sec * 1000000 + start.tv_usec;
+    en = end.tv_sec * 1000000 + end.tv_usec;
+    double time = en - st;
     if (opt == true)
     {
         std::cout << "After: (vector)";
@@ -119,7 +121,7 @@ bool    checkNumber(char *nb1, char *nb2)
 {
     for (int i = 0; nb1[i]; i++)
     {
-        if (!isdigit(nb1[i]))
+        if (nb1[i] < '0' || nb1[i] > '9')
         {
             std::cerr << "Error: Invalid argument" << std::endl;
             return false;
@@ -127,16 +129,11 @@ bool    checkNumber(char *nb1, char *nb2)
     }
     for (int i = 0; nb2[i]; i++)
     {
-        if (!isdigit(nb2[i]))
+        if (nb2[i] < '0' || nb2[i] > '9')
         {
-            std::cerr << "Error: Invalid argument" << std::endl;
+            std::cerr << "Error: Invalid argumenti" << std::endl;
             return false;
         }
-    }
-    if (std::atoi(nb1) < 0 || std::atoi(nb2) < 0)
-    {
-        std::cerr << "Error: Negative number" << std::endl;
-        return false;
     }
     return true;
 }

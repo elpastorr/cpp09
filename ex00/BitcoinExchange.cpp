@@ -5,11 +5,7 @@ std::map<std::string, double> readData()
     std::map<std::string, double> _data;
     std::ifstream file("data.csv");
     if (!file)
-    {
-        std::cerr << "Error: could not open data file" << std::endl;
-        file.close();
-        exit(1);
-    }
+        throw std::invalid_argument("Error: could not open data file");
     std::string line;
     std::getline(file, line);
     while (std::getline(file, line))
@@ -29,22 +25,25 @@ void checkInput(char *input, std::map<std::string, double> data)
     if (!file)
     {
         std::cerr << "Error: could not open input file" << std::endl;
-        exit(1);
+        throw std::invalid_argument("Error: could not open input file");
+
     }
     std::string line;
     std::getline(file, line);
     if (line.compare("date | value"))
     {
-        std::cerr << "Error: First line of input file is not 'date | value'" << std::endl;
         file.close();
-        exit(1);
+        throw std::invalid_argument("Error: First line of input file is not 'date | value'");
     }
     while (std::getline(file, line))
     {
+
         std::istringstream iss(line);
         std::string date, value;
         char    separator;
-        if (!(iss >> date >> separator >> value) || separator != '|')
+        if (line == "")
+            ;
+        else if (!(iss >> date >> separator >> value) || separator != '|')
             std::cout << "Error: bad input => " << line << std::endl;
         else if (!checkDate(date) || !checkValue(value))
             std::cout << "Error: bad input => " << line << std::endl;
@@ -77,8 +76,12 @@ std::string moveBackOneDay(const std::string &date)
     int year, month, day;
     sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day);
     int prev_year = year, prev_month = month, prev_day = day - 1;
-    if (prev_year > 2023)
-        prev_year = 2023;
+    if (prev_year >= 2023)
+    {
+        prev_year = 2022;
+        prev_month = 3;
+        prev_day = 29;
+    }
     if (prev_day == 0)
     {
         prev_month -= 1;
@@ -139,7 +142,7 @@ bool    checkValue(const std::string &value)
 {
     try
     {
-        std::stof(value);
+        std::stod(value);
     }
     catch(const std::invalid_argument& e)
     {

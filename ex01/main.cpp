@@ -5,7 +5,7 @@ int main(int ac, char **av)
     if (ac != 2)
     {
         std::cerr << "Error: Wrong number of arguments" << std::endl;
-        exit(1);
+        return (1);
     }
     try
     {
@@ -13,6 +13,8 @@ int main(int ac, char **av)
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what();
+        std::cerr << e.what() << std::endl;
+        return (1);
     }
+    return (0);
 }

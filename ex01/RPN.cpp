@@ -13,7 +13,7 @@ int calcul(int n1, int n2, char o)
         case '/':
         {
             if (n2 == 0)
-                throw std::invalid_argument("Division by 0 imposible.\n");
+                throw std::invalid_argument("Division by 0 imposible.");
             return (n1 / n2);
         }
     }
@@ -28,10 +28,10 @@ void    read_RPN(std::string input)
     op = num = 0;
     for (size_t i = 0; i < input.length(); i++)
     {
-        if (isdigit(input[i]))
+        if (input[i] >= '0' && input[i] <= '9')
         {
-            if (input[i + 1] && !isspace(input[i + 1]))
-                throw std::invalid_argument("Invalid Input\n");
+            if (input[i + 1] && (input[i + 1] != ' '))
+                throw std::invalid_argument("Invalid Input");
             num++;
             nbrs.push(input[i] - '0');
         }
@@ -41,18 +41,18 @@ void    read_RPN(std::string input)
         }
         else if (ops.find(input[i]) != std::string::npos)
         {
-            if (num < 2 || (input[i + 1] && !isspace(input[i + 1])))
-                throw std::invalid_argument("Invalid Inprut\n");
+            if (num < 2 || (input[i + 1] && (input[i + 1] != ' ')))
+                throw std::invalid_argument("Invalid Input");
             op++;
             int n2 = nbrs.top();
             nbrs.pop(); 
             if (nbrs.size() != 0)
                 nbrs.top() = calcul(nbrs.top(), n2, input[i]);
         }
-        else if (!isspace(input[i]))
-            throw std::invalid_argument("Invalid Input\n");
+        else if (input[i] != ' ')
+            throw std::invalid_argument("Invalid Input");
     }
     if (num != (op + 1))
-        throw std::invalid_argument("Number of operator invalid.\n");
+        throw std::invalid_argument("Number of operator invalid.");
     std::cout << nbrs.top() << std::endl;
 }

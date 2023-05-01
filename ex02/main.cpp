@@ -5,8 +5,16 @@ int main(int ac, char **av)
     if (ac < 2)
     {
         std::cerr << "Error" << std::endl;
-        exit(1);
+        return (1);
     }
-    else
+    try
+    {
         pMergeMe(ac, av);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+        return (1);
+    }
+    return (0);
 }
